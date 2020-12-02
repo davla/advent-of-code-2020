@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  compiler:
+    command: bash
+    image: zenika/kotlin:alpine
+    volumes:
+    - type: bind
+      source: ./src
+      target: /src
