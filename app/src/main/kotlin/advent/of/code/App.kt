@@ -1,9 +1,33 @@
 package advent.of.code
 
 import java.io.File
+import java.io.IOException
+
+val cwd = File(System.getProperty("user.dir")).toPath()
+
+private fun findFile(filePath: String): File {
+    val file = File(filePath)
+    val path = file.toPath()
+
+    if (path.isAbsolute()) {
+        return file
+    }
+
+    val relativeFile = cwd.resolve(path).toFile()
+    if (relativeFile.exists()) {
+        return relativeFile
+    }
+
+    val inputsFile = cwd.resolve("../inputs").resolve(path).toFile()
+    if (inputsFile.exists()) {
+        return inputsFile
+    }
+
+    throw IOException("File $path does not exist")
+}
 
 private fun parseLines(path: String) =
-    File(path).readLines().asSequence()
+    findFile(path).readLines().asSequence()
 
 fun main(args: Array<String>) {
     val lines = parseLines(args[2])
