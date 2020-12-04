@@ -28,12 +28,7 @@ object Day3 {
     private fun parseLine(line: String) =
         line.map(Tile::fromChar)
 
-    private fun parseInput(path: String) =
-        File(path).readLines().asSequence()
-            .map(::parseLine)
-            .toList()
-
-    private fun navigate(map: Collection<Collection<Tile>>,
+    private fun navigate(map: Sequence<Collection<Tile>>,
                          nextX: (Int) -> Int): Int =
         map.fold(Pair(0, 0)) { (trees, x), line ->
             Pair(
@@ -42,14 +37,17 @@ object Day3 {
             )
         }.first
 
-    fun puzzle1(args: Iterable<String>) =
-        navigate(parseInput(args.first()), { it + 3 })
+    fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
+        navigate(inputLines.map(::parseLine), { it + 3 })
 
-    fun puzzle2(args: Iterable<String>) =
-        parseInput(args.first())
+    fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>) =
+        inputLines.map(::parseLine)
+            .toList()
             .let { lines ->
                 coordsProgressions.map { (nextX, yIndices) ->
-                    navigate(lines.toList().slice(yIndices(lines.size)), nextX)
+                    val linesSeq = lines.slice(yIndices(lines.size))
+                        .asSequence()
+                    navigate(linesSeq, nextX)
                 }
             }.map(Int::toLong)
             .reduce(Long::times)

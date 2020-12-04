@@ -14,19 +14,15 @@ private fun parseLine(line: String) =
             Pair(PasswordPolicy(min.toInt(), max.toInt(), char.first()), password)
         }
 
-private fun parseInput(path: String) =
-    File(path).readLines().asSequence()
-        .map(::parseLine)
-
-fun puzzle1(args: Iterable<String>) =
-    parseInput(args.first())
+fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
+    inputLines.map(::parseLine)
         .filter { (policy, password) ->
             val occurrences = password.count { it == policy.char }
             policy.min <= occurrences && policy.max >= occurrences
         }.toList().size.toString()
 
-fun puzzle2(args: Iterable<String>) =
-    parseInput(args.first())
+fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>) =
+    inputLines.map(::parseLine)
         .filter { (policy, password) ->
             password.slice(listOf(policy.min - 1, policy.max - 1))
                 .count { it == policy.char } == 1

@@ -83,18 +83,17 @@ object Day4 {
             && passport.passportID.toIntOrNull() != null
     }
 
-    private fun parseInput(path: String) =
-        File(path).readLines().asSequence()
-            .split(String::isBlank)
+    private fun parseInput(lines: Sequence<String>) =
+        lines.split(String::isBlank)
             .map { it.flatMap { it.split(Passport.fieldSeparator) } }
             .map(Passport::parse)
 
-    fun puzzle1(args: Iterable<String>) =
-        parseInput(args.first())
+    fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
+        parseInput(inputLines)
             .count(Passport::isValid)
 
-    fun puzzle2(args: Iterable<String>) =
-        parseInput(args.first())
+    fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>) =
+        parseInput(inputLines)
             .map(::StrictPassport)
             .count(StrictPassport::isValid)
 
