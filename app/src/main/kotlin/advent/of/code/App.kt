@@ -30,7 +30,7 @@ private fun parseLines(path: String) =
     findFile(path).readLines().asSequence()
 
 fun main(args: Array<String>) {
-    val lines = parseLines(args[2])
+    val lines = parseLines(args.getOrNull(2) ?: "${args[0]}.txt")
     val puzzleArgs = args.slice(3..(args.size - 1))
 
     val result = when (Pair(args[0], args[1])) {
