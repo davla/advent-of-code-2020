@@ -42,10 +42,9 @@ object Day3 {
 
     fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>) =
         inputLines.map(::parseLine)
-            .toList()
             .let { lines ->
                 coordsProgressions.map { (nextX, yIndices) ->
-                    val linesSeq = lines.slice(yIndices(lines.size))
+                    val linesSeq = lines.toList().slice(yIndices(lines.count()))
                         .asSequence()
                     navigate(linesSeq, nextX)
                 }
