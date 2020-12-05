@@ -36,10 +36,23 @@ object Day5 {
                 })
         }
 
-    fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
+    private fun parseInput(inputLines: Sequence<String>) =
         inputLines.map(::parseLine)
             .map { Pair<Int, Int>(
                     search(it.first.toList(), rowDirections, rowRange),
                     search(it.second.toList(), colDirections, colRange))
-            }.map { (row, col) -> row * 8 + col }.max()
+            }.map { (row, col) -> row * 8 + col }
+
+    fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
+        parseInput(inputLines).maxOrNull()
+
+    fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>) =
+        (parseInput(inputLines)
+            .sorted()
+            .zipWithNext()
+            .find { (a, b) -> a + 1 < b }
+            ?: throw IllegalArgumentException())
+            .let { (a, _) -> a + 1 }
+
+
 }
