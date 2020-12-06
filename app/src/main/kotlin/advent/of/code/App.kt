@@ -35,6 +35,7 @@ fun main(args: Array<String>) {
 
     val result = when (Pair(args[0], args[1])) {
         Pair("day1", "puzzle1") -> Day1.puzzle1(lines, puzzleArgs)
+        Pair("day1", "puzzle2") -> Day1.puzzle2(lines, puzzleArgs)
         Pair("day2", "puzzle1") -> Day2.puzzle1(lines, puzzleArgs)
         Pair("day2", "puzzle2") -> Day2.puzzle2(lines, puzzleArgs)
         Pair("day3", "puzzle1") -> Day3.puzzle1(lines, puzzleArgs)
