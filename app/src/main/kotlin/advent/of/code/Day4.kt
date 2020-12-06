@@ -1,20 +1,8 @@
 package advent.of.code
 
-import java.io.File
+import advent.of.code.util.*
 
 object Day4 {
-    private fun <T> Sequence<T>.split(predicate: (T) -> Boolean): Iterable<Iterable<T>> =
-        fold(mutableListOf(mutableListOf<T>())) { acc, item ->
-            if (predicate(item))
-                acc.add(mutableListOf<T>())
-            else
-                acc.last().add(item)
-            acc
-        }
-
-    private fun <T> Iterable<T>.partitionWhile(predicate: (T) -> Boolean): Pair<Iterable<T>, Iterable<T>> =
-        Pair(takeWhile(predicate), dropWhile(predicate))
-
     private class Passport(val birthYear: Int?,
                            val issueYear: Int?,
                            val expirationYear: Int?,

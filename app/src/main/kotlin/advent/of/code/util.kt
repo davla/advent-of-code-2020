@@ -11,3 +11,8 @@ fun <T> Sequence<T>.split(predicate: (T) -> Boolean): Iterable<Iterable<T>> =
 
 fun <T> Iterable<T>.partitionWhile(predicate: (T) -> Boolean): Pair<Iterable<T>, Iterable<T>> =
     Pair(takeWhile(predicate), dropWhile(predicate))
+
+fun <T, U> Pair<T, U>.asIterable() = listOf(first, second)
+
+fun IntProgression.lowerHalf() = first..(first + count() / 2 - 1)
+fun IntProgression.upperHalf() = (last - count() / 2 + 1)..last

@@ -1,7 +1,6 @@
 package advent.of.code
 
-import kotlin.math.ceil
-import kotlin.math.floor
+import advent.of.code.util.*
 
 object Day5 {
 
@@ -9,14 +8,6 @@ object Day5 {
     private val colRange = 0..7
     private val rowDirections = Pair('F', 'B')
     private val colDirections = Pair('L', 'R')
-
-    private fun <T> Iterable<T>.partitionWhile(predicate: (T) -> Boolean): Pair<Iterable<T>, Iterable<T>> =
-        Pair(takeWhile(predicate), dropWhile(predicate))
-
-    private fun <T, U> Pair<T, U>.asIterable() = listOf(first, second)
-
-    private fun IntProgression.lowerHalf() = first..(first + count() / 2 - 1)
-    private fun IntProgression.upperHalf() = (last - count() / 2 + 1)..last
 
     private fun parseLine(line: String) =
         line.asIterable().partitionWhile { it in rowDirections.asIterable() }
