@@ -3,7 +3,7 @@ package advent.of.code
 import java.io.File
 import java.io.IOException
 
-val cwd = File(System.getProperty("user.dir")).toPath()
+private val cwd = File(System.getProperty("user.dir")).toPath()
 
 private fun findFile(filePath: String): File {
     val file = File(filePath)
@@ -34,6 +34,7 @@ fun main(args: Array<String>) {
     val puzzleArgs = args.slice(3..(args.size - 1))
 
     val result = when (Pair(args[0], args[1])) {
+        Pair("day1", "puzzle1") -> Day1.puzzle1(lines, puzzleArgs)
         Pair("day2", "puzzle1") -> Day2.puzzle1(lines, puzzleArgs)
         Pair("day2", "puzzle2") -> Day2.puzzle2(lines, puzzleArgs)
         Pair("day3", "puzzle1") -> Day3.puzzle1(lines, puzzleArgs)

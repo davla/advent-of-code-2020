@@ -1,5 +1,10 @@
 package advent.of.code.util
 
+fun <T> Iterable<T>.cartesianProduct(vararg others: Iterable<T>): Iterable<Iterable<T>> =
+    others.fold(this.map(::listOf)) { acc, ts ->
+        acc.flatMap { xs -> ts.map { y -> xs + listOf(y) } }
+    }
+
 fun <T> Sequence<T>.split(predicate: (T) -> Boolean): Iterable<Iterable<T>> =
     fold(mutableListOf(mutableListOf<T>())) { acc, item ->
         if (predicate(item))
