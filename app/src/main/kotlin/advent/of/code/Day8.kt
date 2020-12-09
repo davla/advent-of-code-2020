@@ -1,7 +1,7 @@
 package advent.of.code
 
 object Day8 {
-    private class Instruction(val op: String, val arg: Int) {
+    private data class Instruction(val op: String, val arg: Int) {
         var execCount = 0
 
         companion object {
@@ -39,4 +39,43 @@ object Day8 {
             .map(Instruction::parse)
             .toList()
             .let { CPU().apply { execute(it) }.acc }
+
+    fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>): Int {
+        // val instructionsToChange = program.count { (op, _) -> op in listOf("nop", "jmp") }
+        var counter = 0
+
+        var cpu: CPU = CPU()
+        try {
+            var lastIndex = 0
+            while (true) {
+                        val program = inputLines.map { it.split(" ") }
+            .map(Instruction::parse)
+            .toList()
+
+                counter += 1
+                println("Progress: ${counter.toDouble() / 290 * 100}%")
+
+                cpu = CPU()
+                lastIndex = (program.withIndex().toList().subList(lastIndex, program.size)
+                    .find { (_, v) -> v.op in listOf("nop", "jmp") } ?: throw NullPointerException())
+                    .index
+
+                // lastIndex = program.subList(lastIndex, program.size)
+                //     .indexOfFirst { it.op in listOf("nop", "jmp") } + lastIndex
+                println(lastIndex)
+                val instruction = program.elementAt(lastIndex)
+                val alteredProgram = (program.take(lastIndex)
+                    + listOf(Instruction(when (instruction.op) {
+                        "nop" -> "jmp"
+                        "jmp" -> "nop"
+                        else -> instruction.op}, instruction.arg))
+                    + program.drop(lastIndex + 1))
+                lastIndex += 1
+
+                cpu.execute(alteredProgram)
+            }
+        } catch (e: IllegalArgumentException) {
+            return cpu.acc
+        }
+    }
 }
