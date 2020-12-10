@@ -16,4 +16,14 @@ object Day9 {
             ?: throw IllegalArgumentException())
             .let { it.first }
     }
+
+    fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>): Long {
+        val invalidNumber = puzzle1(inputLines, args)
+        val inputs = inputLines.map(String::toLong)
+        return ((2..inputs.count()).asSequence()
+            .flatMap { inputs.windowed(it) }
+            .find { it.sum() == invalidNumber }
+            ?: throw IllegalArgumentException())
+            .let { listOf(it.maxOrNull(), it.minOrNull()).filterNotNull().sum() }
+    }
 }
