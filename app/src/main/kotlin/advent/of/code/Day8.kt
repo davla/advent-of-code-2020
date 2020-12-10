@@ -1,9 +1,7 @@
 package advent.of.code
 
 object Day8 {
-    private data class Instruction(val op: String, val arg: Int) {
-        var execCount = 0
-
+    private class Instruction(val op: String, val arg: Int) {
         companion object {
             fun parse(tokens: Iterable<String>) =
                 Instruction(tokens.first(), tokens.drop(1).first().toInt())
@@ -14,12 +12,15 @@ object Day8 {
         var acc = 0
         var programCounter = 0
 
+        private val visitedAddresses = mutableSetOf<Int>()
+
         fun execute(program: Collection<Instruction>) {
             while (programCounter < program.count()) {
                 val instruction = program.elementAt(programCounter)
-                if (instruction.execCount == 1) {
+                if (programCounter in visitedAddresses) {
                     return
                 }
+                visitedAddresses.add(programCounter)
 
                 when (instruction.op) {
                     "acc" -> acc += instruction.arg
@@ -28,9 +29,7 @@ object Day8 {
                     "jmp" -> programCounter += instruction.arg
                     else -> programCounter += 1
                 }
-                instruction.execCount += 1
             }
-            throw IllegalArgumentException()
         }
     }
 
