@@ -33,6 +33,22 @@ object Day8 {
         }
     }
 
+    private class ControlFlowGraph {
+        class Node(val instruction: Instruction, val address: Int)
+        class Edge(val from: Instruction, val to: Instruction) {
+            val isNop = from.op == "nop"
+            val isJump = from.op == "jmp"
+        }
+
+        val nodes = mutableSetOf<Node>()
+        val edges = mutableSetOf<Edge>()
+
+        fun addNode(node: Node) { nodes.add(node) }
+        fun addEdge(edge: Edge) { edges.add(edge) }
+
+        fun
+    }
+
     fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
         inputLines.map { it.split(" ") }
             .map(Instruction::parse)
