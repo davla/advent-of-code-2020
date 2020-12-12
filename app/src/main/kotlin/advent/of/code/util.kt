@@ -21,3 +21,23 @@ fun <T, U> Pair<T, U>.asIterable() = listOf(first, second)
 
 fun IntProgression.lowerHalf() = first..(first + count() / 2 - 1)
 fun IntProgression.upperHalf() = (last - count() / 2 + 1)..last
+
+class Matrix<T>(private val items: Collection<Collection<T>>) {
+    data class Indices(val row: Int, val col: Int)
+
+    fun elementAtOrNull(row: Int, col: Int) =
+        items.elementAtOrNull(row)?.elementAtOrNull(col)
+
+    fun <R> mapIndexed(f: (Indices, T) -> R) =
+        Matrix(items.mapIndexed { rowIndex, row ->
+            row.mapIndexed { colIndex, item ->
+                f(Indices(rowIndex, colIndex), item)
+            }
+        })
+
+    fun count(predicate: (T) -> Boolean) =
+        items.fold(0) { count, row -> count + row.count(predicate) }
+
+    override operator fun equals(that: Any?) =
+        that is Matrix<*> && this.items == that.items
+}
