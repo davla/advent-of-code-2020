@@ -35,18 +35,40 @@ object Day8 {
 
     private class ControlFlowGraph {
         class Node(val instruction: Instruction, val address: Int)
-        class Edge(val from: Instruction, val to: Instruction) {
-            val isNop = from.op == "nop"
-            val isJump = from.op == "jmp"
+        class Edge(val from: Node, val to: Node) {
+            private val distance = to.address - from.address
+            val isNopFix = from.op == "nop" && distance != 1
+            val isJumpFix = from.op == "jmp" && distance != from.instruction.arg
         }
 
         val nodes = mutableSetOf<Node>()
         val edges = mutableSetOf<Edge>()
 
-        fun addNode(node: Node) { nodes.add(node) }
-        fun addEdge(edge: Edge) { edges.add(edge) }
+        val edgesWithNoTo = mutableSetOf<Pair<Node, Int>>()
 
-        fun
+        fun addNode(node: Node) {
+            nodes.add(node)
+
+            val from = edgesWithNoTo.any { it.second == node.address }
+            if (from != null) {
+                addEdge(from.first, node)
+            }
+        }
+
+        fun addEdge(from: Node, to: Node) { edges.add(Edge(from, to)) }
+
+        fun addEdge(from: Node, offset: Int) {
+            val targetAddress = from.address + offset
+            val target = nodes.find { it.address == targetAddress }
+            if (target != null) {
+                addEdge(from, target)
+            }
+            else {
+                edgesWithNoTo.add(Pair(from, targetAddress))
+            }
+        }
+
+        fun addEdge(from: Node) { addEdge(from, from.address.arg) }
     }
 
     fun puzzle1(inputLines: Sequence<String>, args: Iterable<String>) =
@@ -56,41 +78,19 @@ object Day8 {
             .let { CPU().apply { execute(it) }.acc }
 
     fun puzzle2(inputLines: Sequence<String>, args: Iterable<String>): Int {
-        // val instructionsToChange = program.count { (op, _) -> op in listOf("nop", "jmp") }
-        var counter = 0
-
-        var cpu: CPU = CPU()
-        try {
-            var lastIndex = 0
-            while (true) {
-                        val program = inputLines.map { it.split(" ") }
+        inputLines.map { it.split(" ") }
             .map(Instruction::parse)
-            .toList()
+            .foldIndexed(ControlFlowGraph()) { address, graph, instruction ->
+                val fromNode = Node(instruction, addresss)
+                graph.addNode(fromNode)
+                graph.addEdge(fromNode, 1)
 
-                counter += 1
-                println("Progress: ${counter.toDouble() / 290 * 100}%")
+                when (instruction.op) {
+                    "nop", "jmp" -> graph.addEdge(fromNode)
+                    else -> Unit
+                }
 
-                cpu = CPU()
-                lastIndex = (program.withIndex().toList().subList(lastIndex, program.size)
-                    .find { (_, v) -> v.op in listOf("nop", "jmp") } ?: throw NullPointerException())
-                    .index
-
-                // lastIndex = program.subList(lastIndex, program.size)
-                //     .indexOfFirst { it.op in listOf("nop", "jmp") } + lastIndex
-                println(lastIndex)
-                val instruction = program.elementAt(lastIndex)
-                val alteredProgram = (program.take(lastIndex)
-                    + listOf(Instruction(when (instruction.op) {
-                        "nop" -> "jmp"
-                        "jmp" -> "nop"
-                        else -> instruction.op}, instruction.arg))
-                    + program.drop(lastIndex + 1))
-                lastIndex += 1
-
-                cpu.execute(alteredProgram)
+                graph
             }
-        } catch (e: IllegalArgumentException) {
-            return cpu.acc
-        }
     }
 }
