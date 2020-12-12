@@ -25,6 +25,23 @@ fun IntProgression.upperHalf() = (last - count() / 2 + 1)..last
 class Matrix<T>(private val items: Collection<Collection<T>>) {
     data class Indices(val row: Int, val col: Int)
 
+    val size = Pair(items.size, items.first().size)
+
+    override operator fun equals(other: Any?) =
+        other is Matrix<*> && this.items == other.items
+
+    override fun toString() =
+        items.map { it.joinToString(separator = "") }
+            .joinToString(separator = "\n")
+
+    fun colAt(at: Int) = items.map { it.elementAt(at) }
+
+    fun count(predicate: (T) -> Boolean) =
+        items.fold(0) { count, row -> count + row.count(predicate) }
+
+    fun elementAt(row: Int, col: Int) =
+        items.elementAt(row).elementAt(col)
+
     fun elementAtOrNull(row: Int, col: Int) =
         items.elementAtOrNull(row)?.elementAtOrNull(col)
 
@@ -35,9 +52,8 @@ class Matrix<T>(private val items: Collection<Collection<T>>) {
             }
         })
 
-    fun count(predicate: (T) -> Boolean) =
-        items.fold(0) { count, row -> count + row.count(predicate) }
+    fun rowAt(at: Int) = items.elementAt(at)
 
-    override operator fun equals(that: Any?) =
-        that is Matrix<*> && this.items == that.items
+    fun slice(rowIndices: IntProgression, colIndices: IntProgression) =
+        rowIndices.zip(colIndices, ::elementAt)
 }
