@@ -26,11 +26,17 @@ object Day15 {
         fun asSequence() = seed.asSequence() + generateSequence(::next)
     }
 
-    fun puzzle1(inputLines: Sequence<String>, args: Collection<String>) =
+    private fun callAt(inputLines: Sequence<String>, turn: Long): Long {
         val seed = inputLines.flatMap { it.split(",").map(String::toLong) }
         return MemoryGame(seed.toList())
             .asSequence()
-            .drop(2020 - 1)
+            .drop(turn.toInt() - 1)
             .first()
     }
+
+    fun puzzle1(inputLines: Sequence<String>, args: Collection<String>) =
+        callAt(inputLines, 2020)
+
+    fun puzzle2(inputLines: Sequence<String>, args: Collection<String>) =
+        callAt(inputLines, 30000000)
 }
