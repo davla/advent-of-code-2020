@@ -56,6 +56,7 @@ fun main(args: Array<String>) {
         Pair("day10", "puzzle2") -> Day10.puzzle2(lines, puzzleArgs)
         Pair("day11", "puzzle1") -> Day11.puzzle1(lines, puzzleArgs)
         Pair("day11", "puzzle2") -> Day11.puzzle2(lines, puzzleArgs)
+        Pair("day12", "puzzle1") -> Day12.puzzle1(lines, puzzleArgs)
         Pair("day13", "puzzle1") -> Day13.puzzle1(lines, puzzleArgs)
         Pair("day13", "puzzle2") -> Day13.puzzle2(lines, puzzleArgs)
         Pair("day14", "puzzle1") -> Day14.puzzle1(lines, puzzleArgs)
