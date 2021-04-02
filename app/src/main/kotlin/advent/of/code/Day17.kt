@@ -6,14 +6,21 @@ import advent.of.code.util.gameoflife.Indices
 
 object Day17 {
     fun puzzle1(inputLines: Sequence<String>, args: Collection<String>): Int =
+        countActiveCubes(inputLines, dimensionCount = 3)
+
+    fun puzzle2(inputLines: Sequence<String>, args: Collection<String>) =
+        countActiveCubes(inputLines, dimensionCount = 4)
+
+    private fun countActiveCubes(inputLines: Sequence<String>,
+        dimensionCount: Int, cycleCount: Int = 6) =
         gameOfLife(
-            seed = parseInput(inputLines, 3),
+            seed = parseInput(inputLines, dimensionCount),
             evolve = SurroundingEvolution(
                 getSurrounding = Indices::adjacent,
                 evolveElement = ::evolve,
                 default = Cube.INACTIVE
             ).asFunction()
-        ).take(7)
+        ).take(cycleCount + 1)
         .last()
         .values
         .countActive()
