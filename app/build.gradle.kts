@@ -25,6 +25,8 @@ dependencies {
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    implementation("com.github.h0tk3y.betterParse:better-parse:0.4.1")
 }
 
 application {
