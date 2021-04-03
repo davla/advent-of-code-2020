@@ -29,7 +29,7 @@ private data class Multiplication(
 }
 
 object Day18 {
-    private val grammar = object : Grammar<ArithmeticExp>() {
+    private abstract class ArithmeticGrammar : Grammar<ArithmeticExp>() {
         val openParen by literalToken("(")
         val closeParen by literalToken(")")
         val plus by literalToken("+")
@@ -42,6 +42,10 @@ object Day18 {
             parenExp or
             number.map { Number(it.text.toLong()) }
 
+        abstract val exp: Parser<ArithmeticExp>
+    }
+
+    private val samePrecedenceGrammar = object : ArithmeticGrammar() {
         val binaryOpTokens by plus or times
         val binaryOp by leftAssociative(term, binaryOpTokens) { a, op, b ->
             when (op.type) {
@@ -51,15 +55,35 @@ object Day18 {
             }
         }
 
-        val exp: Parser<ArithmeticExp> by
+        override val exp by
             binaryOp or
             term
 
         override val rootParser by exp
     }
 
-    fun puzzle1(inputLines: Sequence<String>, args: Collection<String>): Long =
+    private val differentPrecedenceGrammar = object : ArithmeticGrammar() {
+        val addition by leftAssociative(term, plus)
+            { a, _, b -> Addition(a, b) }
+        val multiplication by leftAssociative(addition, times)
+            { a, _, b -> Multiplication(a, b) }
+
+        override val exp by
+            multiplication or
+            term
+
+        override val rootParser by exp
+    }
+
+    private fun calculate(inputLines: Sequence<String>,
+        grammar: ArithmeticGrammar) =
         inputLines.map(grammar::parseToEnd)
             .map(ArithmeticExp::evaluate)
             .sum()
+
+    fun puzzle1(inputLines: Sequence<String>, args: Collection<String>): Long =
+        calculate(inputLines, samePrecedenceGrammar)
+
+    fun puzzle2(inputLines: Sequence<String>, args: Collection<String>): Long =
+        calculate(inputLines, differentPrecedenceGrammar)
 }
